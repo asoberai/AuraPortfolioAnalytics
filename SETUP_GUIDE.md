@@ -6,9 +6,15 @@ This guide helps you set up **AuraQuant**, a trading bot designed for the LimeTr
 
 ## 📋 Prerequisites
 
-1. **Python 3.8+** installed
+1. **Python 3.10+** installed (LimeTrader SDK requirement)
 2. **LimeTrader account** with API access
 3. **Network connectivity** to LimeTrader data centers (VPN/cross-connect)
+
+### Python Version Check
+```bash
+python python_version_check.py
+```
+This will verify your Python version and SDK compatibility.
 
 ## 🛠️ Installation Steps
 
@@ -25,11 +31,31 @@ source lime_env/bin/activate  # On Windows: lime_env\Scripts\activate
 pip install -r requirements.txt
 ```
 
-### Step 2: LimeTrader SDK Installation
+### Step 2: Python Version Verification
+
+**Important**: LimeTrader SDK requires **Python 3.10+**
+
+```bash
+# Check your Python version
+python --version
+
+# If below 3.10, upgrade using pyenv (recommended):
+pyenv install 3.13.0
+pyenv local 3.13.0
+
+# Or using conda:
+conda create -n lime_env python=3.13
+conda activate lime_env
+
+# Verify compatibility
+python python_version_check.py
+```
+
+### Step 3: LimeTrader SDK Installation
 
 **Currently**: The official `lime-trader-sdk` package is not yet available on PyPI.
 
-**When Available**: Run `pip install lime-trader-sdk`
+**When Available**: Run `pip install lime-trader-sdk` (requires Python 3.10+)
 
 **For Now**: The project includes fallback support for development and testing.
 

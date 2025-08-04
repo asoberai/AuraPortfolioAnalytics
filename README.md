@@ -134,10 +134,13 @@ For questions or issues:
 
 ## 🚀 Quick Start Commands
 ```bash
-# Test the setup with demo/fallback
+# Check Python compatibility (requires 3.10+)
+python python_version_check.py
+
+# Test the setup with demo (works on any Python version)
 python demo.py
 
-# Run with real credentials (after updating .env or credentials.json)
+# Run with real credentials (requires Python 3.10+ when SDK available)
 python main.py
 
 # Try official SDK examples
