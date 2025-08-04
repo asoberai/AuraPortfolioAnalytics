@@ -5,7 +5,13 @@ Shows Sharpe ratio calculation with mock data
 
 import os
 from dotenv import load_dotenv
-from lime_trader import LimeClient
+try:
+    from lime_trader import LimeClient
+    OFFICIAL_SDK_AVAILABLE = True
+except ImportError:
+    OFFICIAL_SDK_AVAILABLE = False
+    print("⚠️  Official LimeTrader SDK not available - using fallback for demo")
+
 from strategy import SharpeStrategy
 from execution import OrderExecutor
 import pandas as pd
@@ -13,6 +19,36 @@ import numpy as np
 
 # Load environment variables
 load_dotenv()
+
+
+class MockClient:
+    """Simple mock client for demo purposes"""
+    def __init__(self):
+        self.account_data = {
+            'buying_power': 100000.0,
+            'total_value': 100000.0,
+            'cash': 50000.0
+        }
+    
+    def get_account_info(self):
+        return self.account_data
+    
+    # Add mock account property for new SDK compatibility
+    @property 
+    def account(self):
+        return self
+    
+    def get(self):
+        return self.account_data
+    
+    def positions(self):
+        return []
+
+
+def create_mock_client():
+    """Create a mock client for demo purposes"""
+    return MockClient()
+
 
 def demo_with_mock_credentials():
     """Demo with mock credentials to show functionality"""
@@ -28,14 +64,18 @@ def demo_with_mock_credentials():
     os.environ["LIME_SDK_BASE_URL"] = "https://api.lime.co"
     os.environ["LIME_SDK_AUTH_URL"] = "https://auth.lime.co"
     
-    # Initialize client using official SDK
-    try:
-        client = LimeClient.from_env()
-    except Exception:
-        # Fallback to mock for demo purposes
-        print("⚠️  Using mock client for demo (real SDK not configured)")
-        from lime_trader_sdk import Client
-        client = Client(api_key="demo_key_123", api_secret="demo_secret_456")
+    # Initialize client - try official SDK first, then fallback to mock
+    if OFFICIAL_SDK_AVAILABLE:
+        try:
+            client = LimeClient.from_env()
+            print("✅ Using official LimeTrader SDK")
+        except Exception as e:
+            print(f"⚠️  Official SDK failed ({e}), using mock for demo")
+            # Create a simple mock client
+            client = create_mock_client()
+    else:
+        print("⚠️  Using mock client for demo (official SDK not installed)")
+        client = create_mock_client()
     
     try:
         # Test connection

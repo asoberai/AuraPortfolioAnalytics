@@ -3,7 +3,13 @@ AuraQuant - LimeTrader Sharpe Agent
 Main entry point for the trading bot
 """
 
-from lime_trader import LimeClient
+try:
+    from lime_trader import LimeClient
+    OFFICIAL_SDK_AVAILABLE = True
+except ImportError:
+    OFFICIAL_SDK_AVAILABLE = False
+    print("⚠️  Official LimeTrader SDK not available")
+
 from config import (LIME_USERNAME, LIME_PASSWORD, LIME_CLIENT_ID, 
                    LIME_CLIENT_SECRET, LIME_GRANT_TYPE, LIME_BASE_URL, LIME_AUTH_URL)
 import pandas as pd
@@ -13,6 +19,12 @@ import os
 
 def test_connection():
     """Test connection to LimeTrader API"""
+    if not OFFICIAL_SDK_AVAILABLE:
+        print("❌ Official LimeTrader SDK not installed")
+        print("💡 Install the official SDK or use demo.py for testing")
+        print("   pip install lime-trader-sdk  # (when available)")
+        return None
+        
     try:
         # Initialize client using official SDK method
         client = LimeClient.from_env()
