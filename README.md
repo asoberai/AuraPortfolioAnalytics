@@ -10,19 +10,17 @@ AuraQuant combines momentum and mean reversion strategies to generate high-quali
 
 ```
 auraquant/
-├── .env                     # API credentials (create from template)
-├── credentials.json         # Alternative credential format
-├── main.py                  # Entry point and orchestration
-├── config.py                # Configuration and API key management
-├── strategy.py              # Trading signal generation logic
-├── execution.py             # Order execution and position management
-├── demo.py                  # Working demonstration with fallback
-├── real_lime_example.py     # Official SDK examples
+├── .env                     # Your LimeTrader credentials (add password)
+├── main.py                  # Entry point and connection testing
+├── config.py                # Configuration loading
+├── strategy.py              # Trading strategy (momentum + mean reversion)
+├── execution.py             # Order execution and risk management  
+├── demo.py                  # Demo with mock data (always works)
+├── real_lime_example.py     # SDK usage examples
 ├── data/
-│   └── logs/                # Performance and trade logs
-│       ├── daily_returns.csv    # Daily returns for Sharpe calculation
-│       └── order_history.csv    # Trade execution history
-├── requirements.txt         # Python dependencies (includes lime-trader-sdk)
+│   └── logs/                # Performance logs
+│       └── daily_returns.csv    # For Sharpe ratio calculation
+├── requirements.txt         # Python dependencies
 └── README.md               # This file
 ```
 
@@ -41,39 +39,18 @@ pip install -r requirements.txt
 
 ### 2. API Configuration
 
-**Option 1: Using .env file (Recommended)**
+**Simple setup - just add your password:**
 
-Update the `.env` file with your LimeTrader credentials:
-```bash
-LIME_SDK_USERNAME=your_username
-LIME_SDK_PASSWORD=your_password
-LIME_SDK_CLIENT_ID=your_client_id
-LIME_SDK_CLIENT_SECRET=your_client_secret
-LIME_SDK_GRANT_TYPE=password
-LIME_SDK_BASE_URL=https://api.lime.co
-LIME_SDK_AUTH_URL=https://auth.lime.co
-```
-
-**Option 2: Using credentials.json file**
-
-Update `credentials.json` with your credentials:
-```json
-{
-    "username": "your_username",
-    "password": "your_password",
-    "client_id": "your_client_id",
-    "client_secret": "your_client_secret",
-    "grant_type": "password",
-    "base_url": "https://api.lime.co",
-    "auth_url": "https://auth.lime.co"
-}
-```
+1. Copy the example file: `cp .env.example .env`
+2. Edit `.env` and replace `your_actual_password` with your real LimeTrader password
+3. Your credentials are already configured:
+   - Username: `armaan0oberai@gmail.com`
+   - Client ID: `trading-app-dmo-c383`
+   - Client Secret: `4aa00156c97b4ba3952e81fa3e3d7159`
 
 **Test connection:**
 ```bash
 python main.py
-# or
-python real_lime_example.py
 ```
 
 ### 3. Strategy Components
