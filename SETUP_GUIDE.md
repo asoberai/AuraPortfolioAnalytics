@@ -37,10 +37,9 @@ pip install -r requirements.txt
 
 ## Simple .env File Setup
 
-**Easy 2-step setup:**
+**Easy 1-step setup:**
 
-1. **Copy the template:** `cp .env.example .env`
-2. **Add your password:** Edit `.env` and replace `your_actual_password` with your real LimeTrader password
+1. **Add your password:** Edit `.env` file and replace `your_actual_password` with your real LimeTrader password
 
 **Your credentials are already configured:**
 - Username: `armaan0oberai@gmail.com`

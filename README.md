@@ -41,9 +41,8 @@ pip install -r requirements.txt
 
 **Simple setup - just add your password:**
 
-1. Copy the example file: `cp .env.example .env`
-2. Edit `.env` and replace `your_actual_password` with your real LimeTrader password
-3. Your credentials are already configured:
+1. Update the `.env` file with your password (replace `your_actual_password`)
+2. Your credentials are already configured:
    - Username: `armaan0oberai@gmail.com`
    - Client ID: `trading-app-dmo-c383`
    - Client Secret: `4aa00156c97b4ba3952e81fa3e3d7159`
