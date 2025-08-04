@@ -39,64 +39,76 @@ Based on [LimeTrader SDK Documentation](https://docs.lime.co/lime-trader-sdk/get
 
 ### Option 1: Environment Variables (.env file) - **Recommended**
 
-Update `.env` file:
+Create/update `.env` file with your actual credentials:
 ```bash
-LIME_SDK_USERNAME=your_username
-LIME_SDK_PASSWORD=your_password
-LIME_SDK_CLIENT_ID=your_client_id
-LIME_SDK_CLIENT_SECRET=your_client_secret
+LIME_SDK_USERNAME=armaan0oberai@gmail.com
+LIME_SDK_PASSWORD=your_actual_password
+LIME_SDK_CLIENT_ID=trading-app-dmo-c383
+LIME_SDK_CLIENT_SECRET=4aa00156c97b4ba3952e81fa3e3d7159
 LIME_SDK_GRANT_TYPE=password
 LIME_SDK_BASE_URL=https://api.lime.co
 LIME_SDK_AUTH_URL=https://auth.lime.co
 ```
 
+**⚠️ Important**: Replace `your_actual_password` with your real LimeTrader password!
+
 ### Option 2: JSON Credentials File
 
-Update `credentials.json`:
+Your `credentials.json` is already configured with your credentials:
 ```json
 {
-    "username": "your_username",
-    "password": "your_password",
-    "client_id": "your_client_id",
-    "client_secret": "your_client_secret",
+    "username": "armaan0oberai@gmail.com",
+    "password": "<your_password>",
+    "client_id": "trading-app-dmo-c383",
+    "client_secret": "4aa00156c97b4ba3952e81fa3e3d7159",
     "grant_type": "password",
     "base_url": "https://api.lime.co",
     "auth_url": "https://auth.lime.co"
 }
 ```
 
+**⚠️ Important**: Update the `password` field with your actual LimeTrader password!
+
 ### Option 3: Environment Variables (System-wide)
 
-Set these environment variables:
+Set these environment variables with your actual values:
 ```bash
-export LIME_SDK_USERNAME=your_username
-export LIME_SDK_PASSWORD=your_password
-export LIME_SDK_CLIENT_ID=your_client_id
-export LIME_SDK_CLIENT_SECRET=your_client_secret
+export LIME_SDK_USERNAME=armaan0oberai@gmail.com
+export LIME_SDK_PASSWORD=your_actual_password
+export LIME_SDK_CLIENT_ID=trading-app-dmo-c383
+export LIME_SDK_CLIENT_SECRET=4aa00156c97b4ba3952e81fa3e3d7159
 export LIME_SDK_GRANT_TYPE=password
 export LIME_SDK_BASE_URL=https://api.lime.co
 export LIME_SDK_AUTH_URL=https://auth.lime.co
 ```
 
+**⚠️ Important**: Replace `your_actual_password` with your real password!
+
 ## 🧪 Testing Your Setup
 
-### Test 1: Demo Mode (Always Works)
+### Test 1: Credential Setup (Interactive)
+```bash
+python setup_credentials.py
+```
+Interactive script to configure your credentials with all methods.
+
+### Test 2: Demo Mode (Always Works)
 ```bash
 python demo.py
 ```
 This runs with mock data and shows all features working.
 
-### Test 2: Real Connection (Requires Credentials)
+### Test 3: Real Connection (Requires Password)
 ```bash
 python main.py
 ```
-Tests actual LimeTrader API connection.
+Tests actual LimeTrader API connection with your credentials.
 
-### Test 3: Official SDK Examples
+### Test 4: Official SDK Examples
 ```bash
 python real_lime_example.py
 ```
-Shows all credential methods and SDK usage patterns.
+Shows all credential methods and SDK usage patterns with your actual credentials.
 
 ## 📊 Understanding the Output
 

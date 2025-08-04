@@ -11,24 +11,31 @@ import numpy as np
 
 
 def example_with_credentials_json():
-    """Example using credentials.json file"""
-    print("🚀 Real LimeTrader SDK Example")
-    print("=" * 40)
+    """Example using credentials.json file with your actual credentials"""
+    print("🚀 Real LimeTrader SDK Example - credentials.json method")
+    print("=" * 60)
     
     try:
-        # Method 1: Load from credentials.json file
+        # Method 1: Load from credentials.json file  
+        print("📁 Loading credentials from credentials.json...")
         client = LimeClient.from_file("credentials.json")
         
         # Test connection
+        print("🔌 Testing connection...")
         account_info = client.account.get()
         print("✅ Connection successful!")
         print(f"Account: {account_info}")
         
         # Get market data example
-        market_data = client.market_data.quotes("AAPL")
-        print(f"📊 AAPL Market Data: {market_data}")
+        print("\n📊 Getting market data...")
+        try:
+            market_data = client.market_data.quotes("AAPL")
+            print(f"AAPL Market Data: {market_data}")
+        except Exception as e:
+            print(f"⚠️  Market data error: {e}")
         
         # Initialize trading components
+        print("\n🎯 Initializing trading components...")
         strategy = SharpeStrategy()
         executor = OrderExecutor(client)
         
@@ -41,17 +48,22 @@ def example_with_credentials_json():
         print(f"📈 Current Positions: {len(positions)}")
         
         # Example trading signal (you would get real price data)
+        print("\n🎯 Generating trading signal...")
         mock_prices = pd.Series([180.0, 181.5, 179.2, 182.1, 183.0])
         signal = strategy.generate_signal("AAPL", mock_prices)
-        print(f"🎯 Trading Signal: {signal['action']} {signal['symbol']}")
+        print(f"Trading Signal: {signal['action']} {signal['symbol']} (Strength: {signal['strength']:.2f})")
         
         return client
         
     except Exception as e:
         print(f"❌ Error: {e}")
-        print("\n💡 Setup Instructions:")
-        print("1. Update credentials.json with your actual LimeTrader credentials")
-        print("2. Or set environment variables (see .env template)")
+        print("\n💡 Your credentials are configured but password might be missing:")
+        print("   Username: armaan0oberai@gmail.com")
+        print("   Client ID: trading-app-dmo-c383")  
+        print("   Client Secret: 4aa0...7159")
+        print("\n🔧 Next steps:")
+        print("1. Update the password in credentials.json")
+        print("2. Or run: python setup_credentials.py")
         print("3. Make sure you have access to LimeTrader API")
         return None
 
