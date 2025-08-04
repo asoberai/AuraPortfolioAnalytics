@@ -1,0 +1,6 @@
+# lime-trader-sdk             # From Lime docs (name might vary) - Install manually from LimeTrader
+pandas
+numpy
+python-dotenv
+matplotlib
+scikit-learn
