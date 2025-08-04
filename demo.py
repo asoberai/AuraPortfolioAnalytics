@@ -5,7 +5,7 @@ Shows Sharpe ratio calculation with mock data
 
 import os
 from dotenv import load_dotenv
-from lime_trader_sdk import Client
+from lime_trader import LimeClient
 from strategy import SharpeStrategy
 from execution import OrderExecutor
 import pandas as pd
@@ -19,23 +19,37 @@ def demo_with_mock_credentials():
     print("🚀 AuraQuant Demo - LimeTrader Sharpe Agent")
     print("=" * 50)
     
-    # Set up mock credentials
-    os.environ["LIME_API_KEY"] = "demo_key_123"
-    os.environ["LIME_API_SECRET"] = "demo_secret_456"
-    os.environ["LIME_ACCOUNT_ID"] = "DEMO123456"
+    # Set up mock credentials for demo
+    os.environ["LIME_SDK_USERNAME"] = "demo_user"
+    os.environ["LIME_SDK_PASSWORD"] = "demo_pass"
+    os.environ["LIME_SDK_CLIENT_ID"] = "demo_client_id"
+    os.environ["LIME_SDK_CLIENT_SECRET"] = "demo_client_secret"
+    os.environ["LIME_SDK_GRANT_TYPE"] = "password"
+    os.environ["LIME_SDK_BASE_URL"] = "https://api.lime.co"
+    os.environ["LIME_SDK_AUTH_URL"] = "https://auth.lime.co"
     
-    # Initialize client
-    client = Client(api_key="demo_key_123", api_secret="demo_secret_456")
+    # Initialize client using official SDK
+    try:
+        client = LimeClient.from_env()
+    except Exception:
+        # Fallback to mock for demo purposes
+        print("⚠️  Using mock client for demo (real SDK not configured)")
+        from lime_trader_sdk import Client
+        client = Client(api_key="demo_key_123", api_secret="demo_secret_456")
     
     try:
         # Test connection
-        account_info = client.get_account_info()
+        try:
+            account_info = client.account.get()
+        except AttributeError:
+            # Fallback for mock client
+            account_info = client.get_account_info()
         print("✅ Connection successful!")
         print(f"Account Balance: ${account_info['buying_power']:,.2f}")
         
         # Initialize strategy and executor
         strategy = SharpeStrategy()
-        executor = OrderExecutor(client, "DEMO123456")
+        executor = OrderExecutor(client)
         
         # Generate mock price data for AAPL
         dates = pd.date_range('2024-01-01', periods=50, freq='D')

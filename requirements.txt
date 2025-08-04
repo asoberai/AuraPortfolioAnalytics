@@ -1,4 +1,4 @@
-# lime-trader-sdk             # From Lime docs (name might vary) - Install manually from LimeTrader
+lime-trader-sdk
 pandas
 numpy
 python-dotenv

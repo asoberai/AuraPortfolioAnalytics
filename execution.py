@@ -16,9 +16,8 @@ class OrderExecutor:
     Handles order execution and position management for LimeTrader
     """
     
-    def __init__(self, client, account_id: str, max_position_size: float = 10000):
-        self.client = client
-        self.account_id = account_id
+    def __init__(self, client, max_position_size: float = 10000):
+        self.client = client  # LimeClient instance
         self.max_position_size = max_position_size
         self.positions = {}
         self.order_history = []
@@ -27,7 +26,7 @@ class OrderExecutor:
     def get_account_balance(self) -> float:
         """Get current account balance"""
         try:
-            account_info = self.client.get_account_info()
+            account_info = self.client.account.get()
             return float(account_info.get('buying_power', 0))
         except Exception as e:
             print(f"❌ Error getting account balance: {e}")
@@ -36,7 +35,7 @@ class OrderExecutor:
     def get_current_positions(self) -> Dict:
         """Get current positions"""
         try:
-            positions = self.client.get_positions()
+            positions = self.client.account.positions()
             return {pos['symbol']: pos for pos in positions}
         except Exception as e:
             print(f"❌ Error getting positions: {e}")
@@ -48,16 +47,40 @@ class OrderExecutor:
         Place an order through LimeTrader API
         """
         try:
-            order_data = {
-                "symbol": symbol,
-                "side": action.lower(),  # "buy" or "sell"
-                "quantity": abs(quantity),
-                "type": order_type,
-                "account_id": self.account_id
-            }
-            
-            # Place order through client
-            order_response = self.client.place_order(**order_data)
+            # Create order using official SDK
+            if action.lower() == "buy":
+                if order_type == "market":
+                    order_response = self.client.trading.new_order(
+                        symbol=symbol,
+                        quantity=abs(quantity),
+                        side="buy",
+                        type="market"
+                    )
+                else:
+                    # For limit orders, you'd need to specify price
+                    order_response = self.client.trading.new_order(
+                        symbol=symbol,
+                        quantity=abs(quantity),
+                        side="buy",
+                        type="limit",
+                        time_in_force="day"
+                    )
+            else:  # sell
+                if order_type == "market":
+                    order_response = self.client.trading.new_order(
+                        symbol=symbol,
+                        quantity=abs(quantity),
+                        side="sell",
+                        type="market"
+                    )
+                else:
+                    order_response = self.client.trading.new_order(
+                        symbol=symbol,
+                        quantity=abs(quantity),
+                        side="sell",
+                        type="limit",
+                        time_in_force="day"
+                    )
             
             # Log the order
             self.log_order(symbol, action, quantity, order_response)

@@ -11,15 +11,18 @@ AuraQuant combines momentum and mean reversion strategies to generate high-quali
 ```
 auraquant/
 ├── .env                     # API credentials (create from template)
+├── credentials.json         # Alternative credential format
 ├── main.py                  # Entry point and orchestration
 ├── config.py                # Configuration and API key management
 ├── strategy.py              # Trading signal generation logic
 ├── execution.py             # Order execution and position management
+├── demo.py                  # Working demonstration with fallback
+├── real_lime_example.py     # Official SDK examples
 ├── data/
 │   └── logs/                # Performance and trade logs
 │       ├── daily_returns.csv    # Daily returns for Sharpe calculation
 │       └── order_history.csv    # Trade execution history
-├── requirements.txt         # Python dependencies
+├── requirements.txt         # Python dependencies (includes lime-trader-sdk)
 └── README.md               # This file
 ```
 
@@ -38,16 +41,39 @@ pip install -r requirements.txt
 
 ### 2. API Configuration
 
-1. Copy `.env` file and add your LimeTrader credentials:
+**Option 1: Using .env file (Recommended)**
+
+Update the `.env` file with your LimeTrader credentials:
 ```bash
-LIME_API_KEY=your_actual_api_key
-LIME_API_SECRET=your_actual_api_secret
-LIME_ACCOUNT_ID=your_demo_account_id
+LIME_SDK_USERNAME=your_username
+LIME_SDK_PASSWORD=your_password
+LIME_SDK_CLIENT_ID=your_client_id
+LIME_SDK_CLIENT_SECRET=your_client_secret
+LIME_SDK_GRANT_TYPE=password
+LIME_SDK_BASE_URL=https://api.lime.co
+LIME_SDK_AUTH_URL=https://auth.lime.co
 ```
 
-2. Test connection:
+**Option 2: Using credentials.json file**
+
+Update `credentials.json` with your credentials:
+```json
+{
+    "username": "your_username",
+    "password": "your_password",
+    "client_id": "your_client_id",
+    "client_secret": "your_client_secret",
+    "grant_type": "password",
+    "base_url": "https://api.lime.co",
+    "auth_url": "https://auth.lime.co"
+}
+```
+
+**Test connection:**
 ```bash
 python main.py
+# or
+python real_lime_example.py
 ```
 
 ### 3. Strategy Components
@@ -106,8 +132,10 @@ sharpe = (df['return'].mean() / (df['return'].std() + 0.002)) * np.sqrt(252)
 ## 🔧 Development Roadmap
 
 - [x] Core infrastructure setup
-- [x] API integration and testing
+- [x] Official LimeTrader SDK integration
+- [x] Multiple credential configuration methods
 - [x] Basic strategy framework
+- [x] Comprehensive examples and documentation
 - [ ] Advanced signal optimization
 - [ ] Machine learning integration
 - [ ] Real-time dashboard
@@ -127,6 +155,30 @@ For questions or issues:
 2. Review log files in `data/logs/`
 3. Verify `.env` configuration
 4. Test connection with `python main.py`
+
+## 🚀 Quick Start Commands
+```bash
+# Test the setup with demo/fallback
+python demo.py
+
+# Run with real credentials (after updating .env or credentials.json)
+python main.py
+
+# Try official SDK examples
+python real_lime_example.py
+
+# Check Sharpe ratio calculation
+python -c "from main import calculate_sharpe_ratio; calculate_sharpe_ratio()"
+```
+
+## 📚 Official Documentation
+
+This project now uses the official **LimeTrader SDK** based on their documentation:
+- [Getting Started](https://docs.lime.co/lime-trader-sdk/getting_started.html)
+- [Configuration Guide](https://docs.lime.co/lime-trader-sdk/configuring_client.html)
+- [Trading Examples](https://docs.lime.co/lime-trader-sdk/examples.html)
+
+The project is ready for the LimeTrader challenge with official SDK integration and **Sharpe ratio optimization** focus! 🚀
 
 ---
 
