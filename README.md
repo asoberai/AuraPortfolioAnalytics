@@ -1,164 +1,62 @@
-# AuraQuant - LimeTrader Sharpe Agent
+# AuraVest - Portfolio Analytics Platform
 
-AI-assisted trading bot designed for the LimeTrader challenge, specifically focused on maximizing the Sharpe ratio through intelligent signal generation and risk management.
+A comprehensive portfolio management platform with advanced analytics, risk assessment, and historical tracking capabilities.
 
-## 🎯 Project Overview
+## Features
 
-AuraQuant combines momentum and mean reversion strategies to generate high-quality trading signals while maintaining optimal risk-adjusted returns. The system is built with modularity and performance monitoring at its core.
+- **Portfolio Management**: Create and track investment portfolios
+- **Historical Analysis**: Add positions from any date since 2000
+- **Real-time Data**: Live market prices via Yahoo Finance
+- **Risk Analytics**: Comprehensive risk metrics and Monte Carlo simulations
+- **Multiple Views**: Standard, Robinhood-style, and advanced analytics dashboards
+- **Performance Tracking**: Detailed returns analysis and benchmark comparison
 
-## 📁 Project Structure
+## Quick Start
 
-```
-auraquant/
-├── .env                     # Your LimeTrader credentials (add password)
-├── main.py                  # Entry point and connection testing
-├── config.py                # Configuration loading
-├── strategy.py              # Trading strategy (momentum + mean reversion)
-├── execution.py             # Order execution and risk management  
-├── demo.py                  # Demo with mock data (always works)
-├── real_lime_example.py     # SDK usage examples
-├── data/
-│   └── logs/                # Performance logs
-│       └── daily_returns.csv    # For Sharpe ratio calculation
-├── requirements.txt         # Python dependencies
-└── README.md               # This file
-```
-
-## 🚀 Quick Start
-
-### 1. Environment Setup
-
+1. **Install Dependencies**:
 ```bash
-# Create virtual environment
-python3 -m venv lime_env
-source lime_env/bin/activate  # On Windows: lime_env\Scripts\activate
-
-# Install dependencies
 pip install -r requirements.txt
+cd frontend && npm install
 ```
 
-### 2. API Configuration
-
-**Simple setup - just add your password:**
-
-1. Update the `.env` file with your password (replace `your_actual_password`)
-2. Your credentials are already configured:
-   - Username: `armaan0oberai@gmail.com`
-   - Client ID: `trading-app-dmo-c383`
-   - Client Secret: `4aa00156c97b4ba3952e81fa3e3d7159`
-
-**Test connection:**
+2. **Run Application**:
 ```bash
-python main.py
-```
-
-### 3. Strategy Components
-
-#### **strategy.py**
-- **Momentum Signals**: Identifies trending movements
-- **Mean Reversion Signals**: Captures oversold/overbought conditions
-- **Combined Logic**: Weighted signal generation
-- **Position Sizing**: Risk-adjusted position calculation
-
-#### **execution.py**
-- **Order Management**: Automated order placement
-- **Risk Controls**: Position size limits and exposure management
-- **Performance Logging**: Real-time P&L tracking
-- **Sharpe Monitoring**: Continuous ratio calculation
-
-#### **main.py**
-- **Orchestration**: Coordinates strategy and execution
-- **Connection Testing**: API health checks
-- **Performance Reporting**: Daily Sharpe ratio updates
-
-## 📊 Sharpe Ratio Calculation
-
-The system continuously monitors performance through daily return logging:
-
-```python
-# Automatic calculation from logged returns
-df = pd.read_csv("data/logs/daily_returns.csv")
-sharpe = (df['return'].mean() / (df['return'].std() + 0.002)) * np.sqrt(252)
-```
-
-**Target Metrics:**
-- Sharpe Ratio: > 1.5
-- Maximum Drawdown: < 10%
-- Win Rate: > 55%
-
-## 🛡️ Risk Management
-
-- **Position Sizing**: Max 2% risk per trade
-- **Exposure Limits**: Total exposure capped at account size
-- **Stop Losses**: Automatic risk controls
-- **Diversification**: Multi-symbol trading capability
-
-## 📈 Performance Monitoring
-
-### Real-time Metrics
-- Live Sharpe ratio calculation
-- Daily/weekly performance summaries
-- Risk exposure monitoring
-- Trade execution analytics
-
-### Log Files
-- `daily_returns.csv`: Daily P&L for Sharpe calculation
-- `order_history.csv`: Complete trade execution log
-
-## 🔧 Development Roadmap
-
-- [x] Core infrastructure setup
-- [x] Official LimeTrader SDK integration
-- [x] Multiple credential configuration methods
-- [x] Basic strategy framework
-- [x] Comprehensive examples and documentation
-- [ ] Advanced signal optimization
-- [ ] Machine learning integration
-- [ ] Real-time dashboard
-- [ ] Backtesting framework
-
-## 🚨 Important Notes
-
-- **Demo Account**: Always test with demo account first
-- **Risk Management**: Never risk more than you can afford to lose
-- **API Limits**: Respect LimeTrader rate limits
-- **Monitoring**: Always monitor positions during market hours
-
-## 📞 Support
-
-For questions or issues:
-1. Check API documentation
-2. Review log files in `data/logs/`
-3. Verify `.env` configuration
-4. Test connection with `python main.py`
-
-## 🚀 Quick Start Commands
-```bash
-# Check Python compatibility (requires 3.10+)
-python python_version_check.py
-
-# Test the setup with demo (works on any Python version)
-python demo.py
-
-# Run with real credentials (requires Python 3.10+ when SDK available)
+# Backend
 python main.py
 
-# Try official SDK examples
-python real_lime_example.py
-
-# Check Sharpe ratio calculation
-python -c "from main import calculate_sharpe_ratio; calculate_sharpe_ratio()"
+# Frontend (in another terminal)
+cd frontend && npm start
 ```
 
-## 📚 Official Documentation
+3. **Access Application**:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:8000
+- Demo Login: demo@auravest.com / demo123
 
-This project now uses the official **LimeTrader SDK** based on their documentation:
-- [Getting Started](https://docs.lime.co/lime-trader-sdk/getting_started.html)
-- [Configuration Guide](https://docs.lime.co/lime-trader-sdk/configuring_client.html)
-- [Trading Examples](https://docs.lime.co/lime-trader-sdk/examples.html)
+## Usage
 
-The project is ready for the LimeTrader challenge with official SDK integration and **Sharpe ratio optimization** focus! 🚀
+1. **Create Account**: Register or use demo credentials
+2. **Create Portfolio**: Add a new investment portfolio
+3. **Add Positions**: Enter stocks with historical purchase dates
+4. **Analyze**: View performance, risk metrics, and projections
 
----
+## Technology Stack
 
-**Disclaimer**: This is a trading bot for educational and competition purposes. Past performance does not guarantee future results. Always understand the risks involved in trading. 
+- **Backend**: FastAPI, Python
+- **Frontend**: React, Material-UI, Chart.js
+- **Data**: Yahoo Finance API
+- **Analytics**: NumPy, Pandas, Monte Carlo simulations
+
+## API Endpoints
+
+- `POST /auth/login` - Authentication
+- `GET /portfolios` - List portfolios
+- `POST /portfolio/create` - Create portfolio
+- `GET /portfolio/{id}` - Portfolio details
+- `POST /portfolio/{id}/holdings` - Add holdings
+- `GET /market/historical/{ticker}?date=YYYY-MM-DD` - Historical prices
+- `POST /analysis/risk/*` - Risk analysis endpoints
+
+## License
+
+Personal project for educational purposes.
