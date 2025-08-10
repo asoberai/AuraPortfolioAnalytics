@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Box,
@@ -8,7 +8,6 @@ import {
   Grid,
   Tabs,
   Tab,
-  Button,
   Chip,
   Paper,
   LinearProgress,
@@ -17,18 +16,14 @@ import {
   AppBar,
   Toolbar,
   IconButton,
-  Tooltip,
-  Divider
+  Tooltip
 } from '@mui/material';
 import {
   ArrowBack as ArrowBackIcon,
-  TrendingUp as TrendingUpIcon,
-  TrendingDown as TrendingDownIcon,
   Timeline as TimelineIcon,
   Analytics as AnalyticsIcon,
   Assessment as AssessmentIcon,
   PieChart as PieChartIcon,
-  ShowChart as ShowChartIcon,
   DateRange as DateRangeIcon
 } from '@mui/icons-material';
 import { Line, Doughnut, Bar } from 'react-chartjs-2';
@@ -46,11 +41,7 @@ function AdvancedPortfolioAnalytics() {
   const [riskData, setRiskData] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchAllData();
-  }, [portfolioId]);
-
-  const fetchAllData = async () => {
+  const fetchAllData = useCallback(async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
@@ -80,7 +71,11 @@ function AdvancedPortfolioAnalytics() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [portfolioId]);
+
+  useEffect(() => {
+    fetchAllData();
+  }, [fetchAllData]);
 
   const generatePerformanceData = (portfolio) => {
     if (!portfolio.holdings || portfolio.holdings.length === 0) return;

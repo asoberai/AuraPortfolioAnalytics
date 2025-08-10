@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Box,
   Card,
@@ -15,7 +15,6 @@ import {
 } from '@mui/material';
 import { Line, Bar } from 'react-chartjs-2';
 import '../utils/chartSetup'; // Import to register chart components
-import { ROBINHOOD_COLORS, getChartOptions } from '../utils/chartSetup';
 import axios from 'axios';
 
 function RiskVisualization({ portfolioData }) {
@@ -26,13 +25,7 @@ function RiskVisualization({ portfolioData }) {
   const [correlationData, setCorrelationData] = useState(null);
   const theme = useTheme();
 
-  useEffect(() => {
-    if (portfolioData && portfolioData.holdings) {
-      fetchRiskAnalysis();
-    }
-  }, [portfolioData]);
-
-  const fetchRiskAnalysis = async () => {
+  const fetchRiskAnalysis = useCallback(async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
@@ -67,7 +60,13 @@ function RiskVisualization({ portfolioData }) {
     } finally {
       setLoading(false);
     }
-  };
+  }, [portfolioData]);
+
+  useEffect(() => {
+    if (portfolioData && portfolioData.holdings) {
+      fetchRiskAnalysis();
+    }
+  }, [portfolioData, fetchRiskAnalysis]);
 
   const handleTabChange = (event, newValue) => {
     setTabValue(newValue);
@@ -211,7 +210,6 @@ function RiskVisualization({ portfolioData }) {
 
     for (let i = 0; i < bins; i++) {
       const binStart = minValue + i * binWidth;
-      const binEnd = binStart + binWidth;
       labels.push(`${((binStart / 100000 - 1) * 100).toFixed(0)}%`);
     }
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Container,
@@ -14,7 +14,6 @@ import {
   TableHead,
   TableRow,
   Paper,
-  Chip,
   AppBar,
   Toolbar,
   IconButton,
@@ -32,14 +31,13 @@ import {
   Add as AddIcon, 
   ArrowBack as ArrowBackIcon,
   TrendingUp as TrendingUpIcon,
-  TrendingDown as TrendingDownIcon,
   PieChart as PieChartIcon,
   Timeline as TimelineIcon,
   Assessment as AssessmentIcon,
   Refresh as RefreshIcon,
   Speed as SpeedIcon
 } from '@mui/icons-material';
-import { Doughnut, Line, Bar } from 'react-chartjs-2';
+import { Doughnut, Line } from 'react-chartjs-2';
 import RiskVisualization from './RiskVisualization';
 import axios from 'axios';
 
@@ -54,18 +52,7 @@ function EnhancedPortfolio() {
   const [performanceData, setPerformanceData] = useState(null);
   const theme = useTheme();
 
-  useEffect(() => {
-    fetchPortfolio();
-    // Auto-refresh every 60 seconds
-    const interval = setInterval(() => {
-      if (!refreshing) {
-        fetchPortfolio(true);
-      }
-    }, 60000);
-    return () => clearInterval(interval);
-  }, [portfolioId]);
-
-  const fetchPortfolio = async (silent = false) => {
+  const fetchPortfolio = useCallback(async (silent = false) => {
     if (!silent) setLoading(true);
     if (silent) setRefreshing(true);
     
@@ -86,7 +73,18 @@ function EnhancedPortfolio() {
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }, [portfolioId]);
+
+  useEffect(() => {
+    fetchPortfolio();
+    // Auto-refresh every 60 seconds
+    const interval = setInterval(() => {
+      if (!refreshing) {
+        fetchPortfolio(true);
+      }
+    }, 60000);
+    return () => clearInterval(interval);
+  }, [portfolioId, fetchPortfolio, refreshing]);
 
   const generateMockPerformanceData = (portfolioData) => {
     // Generate 30 days of mock performance data

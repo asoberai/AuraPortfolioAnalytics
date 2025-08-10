@@ -14,12 +14,10 @@ import {
   Chip,
   Card,
   CardContent,
-  CircularProgress,
-  Autocomplete
+  CircularProgress
 } from '@mui/material';
 import { 
   ArrowBack as ArrowBackIcon,
-  Search as SearchIcon,
   TrendingUp as TrendingUpIcon,
   Info as InfoIcon
 } from '@mui/icons-material';

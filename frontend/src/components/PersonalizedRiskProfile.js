@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Box,
   Card,
@@ -11,11 +11,7 @@ import {
   Radio,
   LinearProgress,
   Paper,
-  Stepper,
-  Step,
-  StepLabel,
   Chip,
-  Divider,
   useTheme,
   alpha,
   Fade,
@@ -30,7 +26,7 @@ import {
   Timeline as TimelineIcon,
   School as SchoolIcon
 } from '@mui/icons-material';
-import { Doughnut, Radar } from 'react-chartjs-2';
+import { Radar } from 'react-chartjs-2';
 import '../utils/chartSetup'; // Import to register chart components
 import axios from 'axios';
 

@@ -1,21 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import {
   Box,
   Card,
   Typography,
-  Grid,
-  useTheme,
   alpha,
-  Chip,
   Divider,
   Button,
   CircularProgress
 } from '@mui/material';
 import {
   TrendingUp as TrendingUpIcon,
-  TrendingDown as TrendingDownIcon,
-  ShowChart as ShowChartIcon
+  TrendingDown as TrendingDownIcon
 } from '@mui/icons-material';
 import { Doughnut, Line } from 'react-chartjs-2';
 import { ROBINHOOD_COLORS, getDoughnutOptions, getChartOptions } from '../utils/chartSetup';
@@ -26,13 +22,8 @@ function RobinhoodPortfolio() {
   const [portfolioData, setPortfolioData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedView, setSelectedView] = useState('allocation');
-  const theme = useTheme();
 
-  useEffect(() => {
-    fetchPortfolioData();
-  }, [portfolioId]);
-
-  const fetchPortfolioData = async () => {
+  const fetchPortfolioData = useCallback(async () => {
     setLoading(true);
     try {
       const token = localStorage.getItem('token');
@@ -45,7 +36,11 @@ function RobinhoodPortfolio() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [portfolioId]);
+
+  useEffect(() => {
+    fetchPortfolioData();
+  }, [portfolioId, fetchPortfolioData]);
 
   const formatCurrency = (value) => {
     return new Intl.NumberFormat('en-US', {

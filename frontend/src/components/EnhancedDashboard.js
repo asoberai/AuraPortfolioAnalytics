@@ -33,7 +33,6 @@ import {
   ShowChart as ShowChartIcon,
   Analytics as AnalyticsIcon
 } from '@mui/icons-material';
-import { Line } from 'react-chartjs-2';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 
@@ -301,7 +300,7 @@ function EnhancedDashboard() {
               onClick={async () => {
                 try {
                   const token = localStorage.getItem('token');
-                  await axios.post('/portfolio/create', 
+                  await axios.post('http://localhost:8000/portfolio/create', 
                     { name: `Portfolio ${portfolios.length + 1}` },
                     { headers: { Authorization: `Bearer ${token}` }}
                   );
