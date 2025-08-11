@@ -295,6 +295,49 @@ async def get_user_portfolios(
     portfolios = [p for p in USER_PORTFOLIOS.values() if p["user_id"] == current_user.id]
     return [{"id": p["id"], "name": p["name"], "description": p["description"]} for p in portfolios]
 
+@app.delete("/portfolio/{portfolio_id}")
+async def delete_portfolio(
+    portfolio_id: int,
+    current_user: User = Depends(get_current_user)
+):
+    """Delete a portfolio"""
+    portfolio = USER_PORTFOLIOS.get(portfolio_id)
+    if not portfolio or portfolio["user_id"] != current_user.id:
+        raise HTTPException(status_code=404, detail="Portfolio not found")
+    
+    # Delete all holdings in the portfolio first
+    holdings_to_delete = [h_id for h_id, h in USER_HOLDINGS.items() if h["portfolio_id"] == portfolio_id]
+    for holding_id in holdings_to_delete:
+        del USER_HOLDINGS[holding_id]
+    
+    # Delete the portfolio
+    del USER_PORTFOLIOS[portfolio_id]
+    
+    return {"message": f"Portfolio '{portfolio['name']}' deleted successfully"}
+
+@app.delete("/portfolio/{portfolio_id}/holdings/{holding_id}")
+async def delete_holding(
+    portfolio_id: int,
+    holding_id: int,
+    current_user: User = Depends(get_current_user)
+):
+    """Delete a specific holding from a portfolio"""
+    portfolio = USER_PORTFOLIOS.get(portfolio_id)
+    if not portfolio or portfolio["user_id"] != current_user.id:
+        raise HTTPException(status_code=404, detail="Portfolio not found")
+    
+    holding = USER_HOLDINGS.get(holding_id)
+    if not holding or holding["portfolio_id"] != portfolio_id:
+        raise HTTPException(status_code=404, detail="Holding not found")
+    
+    ticker_symbol = holding["ticker_symbol"]
+    quantity = holding["quantity"]
+    
+    # Delete the holding
+    del USER_HOLDINGS[holding_id]
+    
+    return {"message": f"Deleted {quantity} shares of {ticker_symbol}"}
+
 # Market data endpoints
 @app.get("/market/stock/{ticker}")
 async def get_stock_data(ticker: str):

@@ -1,3 +1,0 @@
-"""
-AuraQuant Utilities Package
-""" 

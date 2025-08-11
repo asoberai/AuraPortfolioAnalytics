@@ -1,3 +1,0 @@
-"""
-AuraQuant Core Components Package
-""" 

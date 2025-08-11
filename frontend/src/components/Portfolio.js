@@ -18,13 +18,19 @@ import {
   AppBar,
   Toolbar,
   IconButton,
-  CircularProgress
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
 } from '@mui/material';
 import { 
   Add as AddIcon, 
   ArrowBack as ArrowBackIcon,
   TrendingUp as TrendingUpIcon,
-  TrendingDown as TrendingDownIcon
+  TrendingDown as TrendingDownIcon,
+  Delete as DeleteIcon
 } from '@mui/icons-material';
 import axios from 'axios';
 
@@ -34,6 +40,7 @@ function Portfolio() {
   const [portfolio, setPortfolio] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [deleteDialog, setDeleteDialog] = useState({ open: false, holdingId: null, ticker: '', quantity: 0 });
 
   useEffect(() => {
     fetchPortfolio();
@@ -63,6 +70,29 @@ function Portfolio() {
   const getPercentColor = (value) => {
     if (value === null || value === undefined) return 'default';
     return value >= 0 ? 'success' : 'error';
+  };
+
+  const handleDeleteHolding = (holding) => {
+    setDeleteDialog({
+      open: true,
+      holdingId: holding.id,
+      ticker: holding.ticker || holding.ticker_symbol,
+      quantity: holding.quantity
+    });
+  };
+
+  const confirmDeleteHolding = async () => {
+    try {
+      await axios.delete(`/portfolio/${portfolioId}/holdings/${deleteDialog.holdingId}`);
+      setDeleteDialog({ open: false, holdingId: null, ticker: '', quantity: 0 });
+      fetchPortfolio(); // Refresh portfolio data
+    } catch (error) {
+      console.error('Failed to delete holding:', error);
+    }
+  };
+
+  const cancelDeleteHolding = () => {
+    setDeleteDialog({ open: false, holdingId: null, ticker: '', quantity: 0 });
   };
 
   if (loading) {
@@ -163,6 +193,7 @@ function Portfolio() {
                       <TableCell align="right"><strong>Current Price</strong></TableCell>
                       <TableCell align="right"><strong>Current Value</strong></TableCell>
                       <TableCell align="right"><strong>Day Change</strong></TableCell>
+                      <TableCell align="center"><strong>Actions</strong></TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -201,6 +232,15 @@ function Portfolio() {
                             size="small"
                           />
                         </TableCell>
+                        <TableCell align="center">
+                          <IconButton
+                            color="error"
+                            onClick={() => handleDeleteHolding(holding)}
+                            size="small"
+                          >
+                            <DeleteIcon />
+                          </IconButton>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -227,6 +267,27 @@ function Portfolio() {
           </Button>
         </Box>
       </Container>
+
+      {/* Delete Holding Confirmation Dialog */}
+      <Dialog
+        open={deleteDialog.open}
+        onClose={cancelDeleteHolding}
+      >
+        <DialogTitle>Delete Holding</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete {deleteDialog.quantity} shares of {deleteDialog.ticker}? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={cancelDeleteHolding} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={confirmDeleteHolding} color="error" autoFocus>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

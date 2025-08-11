@@ -14,15 +14,21 @@ import {
   List,
   ListItem,
   ListItemText,
-  Chip
+  Chip,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
 } from '@mui/material';
-import { Add as AddIcon, Logout as LogoutIcon, Assessment as AssessmentIcon } from '@mui/icons-material';
+import { Add as AddIcon, Logout as LogoutIcon, Assessment as AssessmentIcon, Delete as DeleteIcon } from '@mui/icons-material';
 import { useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 
 function Dashboard() {
   const [portfolios, setPortfolios] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [deleteDialog, setDeleteDialog] = useState({ open: false, portfolioId: null, portfolioName: '' });
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
@@ -55,6 +61,28 @@ function Dashboard() {
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  const handleDeletePortfolio = (portfolio) => {
+    setDeleteDialog({ 
+      open: true, 
+      portfolioId: portfolio.id, 
+      portfolioName: portfolio.name 
+    });
+  };
+
+  const confirmDeletePortfolio = async () => {
+    try {
+      await axios.delete(`/portfolio/${deleteDialog.portfolioId}`);
+      setDeleteDialog({ open: false, portfolioId: null, portfolioName: '' });
+      fetchPortfolios(); // Refresh list
+    } catch (error) {
+      console.error('Failed to delete portfolio:', error);
+    }
+  };
+
+  const cancelDeletePortfolio = () => {
+    setDeleteDialog({ open: false, portfolioId: null, portfolioName: '' });
   };
 
   return (
@@ -132,14 +160,23 @@ function Dashboard() {
                     {portfolios.map((portfolio) => (
                       <ListItem
                         key={portfolio.id}
-                        button
-                        onClick={() => navigate(`/portfolio/${portfolio.id}`)}
                         sx={{ border: 1, borderColor: 'divider', borderRadius: 1, mb: 1 }}
                       >
                         <ListItemText
                           primary={portfolio.name}
-                          secondary={`Created: ${new Date(portfolio.created_at).toLocaleDateString()}`}
+                          secondary={portfolio.description || 'No description'}
+                          onClick={() => navigate(`/portfolio/${portfolio.id}`)}
+                          sx={{ cursor: 'pointer' }}
                         />
+                        <IconButton
+                          color="error"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeletePortfolio(portfolio);
+                          }}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
                       </ListItem>
                     ))}
                   </List>
@@ -192,6 +229,27 @@ function Dashboard() {
           </Grid>
         </Grid>
       </Container>
+
+      {/* Delete Confirmation Dialog */}
+      <Dialog
+        open={deleteDialog.open}
+        onClose={cancelDeletePortfolio}
+      >
+        <DialogTitle>Delete Portfolio</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Are you sure you want to delete "{deleteDialog.portfolioName}"? This will also delete all holdings in this portfolio. This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={cancelDeletePortfolio} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={confirmDeletePortfolio} color="error" autoFocus>
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
